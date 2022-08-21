@@ -7,6 +7,11 @@ void term_func() {
 }
 
 /***********************CONSTRUCTORS**************************/
+/* [Function Type] Default Constructor
+ * [Purpose] Creates empty matrix with size 0.
+ */
+Matrix::Matrix() {}
+
 /* [Function Type] Constructor
  * [Purpose] Builds matrix based on sizeand fills entire matrix with one value.
  */
@@ -133,6 +138,9 @@ Matrix Matrix::operator-(Matrix other) const {
 	}
 }
 
+/* [Function Type] Operator Overload
+ * [Purpose] Adds two matricies and sets it equal to this matrix (rhs += lhs is short for rhs = rhs + lhs).
+ */
 Matrix& Matrix::operator+=(Matrix other) {
 	if (other.nCols == this->nCols && other.nRows == this->nRows) {
 		std::vector<std::vector<int>> res;
@@ -150,6 +158,9 @@ Matrix& Matrix::operator+=(Matrix other) {
 	}
 }
 
+/* [Function Type] Operator Overload
+ * [Purpose] Scales a matrix and sets it equal to this matrix (rhs *= scaler is short for rhs = rhs * scaler).
+ */
 Matrix& Matrix::operator*=(int scaler) {
 	std::vector<std::vector<int>> res;
 	for (int i = 0; i < nCols; i++) {
@@ -166,6 +177,9 @@ Matrix& Matrix::operator*=(int scaler) {
 	return *this;
 }
 
+/* [Function Type] Operator Overload
+ * [Purpose] Multiplies two matricies and sets it equal to this matrix (rhs *= lhs is short for rhs = rhs * lhs).
+ */
 Matrix& Matrix::operator*=(Matrix rhs) {
 	Matrix res(this->nRows, rhs.nCols);
 	if (this->isMultipliable(rhs)) {
@@ -185,6 +199,9 @@ Matrix& Matrix::operator*=(Matrix rhs) {
 	return *this;
 }
 
+/* [Function Type] Operator Overload
+ * [Purpose] Subtracts a matrix from the matrix on the left (rhs -= lhs is short for rhs = rhs - lhs).
+ */
 Matrix& Matrix::operator-=(Matrix other) {
 	if (other.nCols == this->nCols && other.nRows == this->nRows) {
 		std::vector<std::vector<int>> res;
@@ -202,7 +219,10 @@ Matrix& Matrix::operator-=(Matrix other) {
 	}
 }
 
-bool Matrix::operator==(Matrix other) {
+/* [Function Type] Operator Overload
+ * [Purpose] Checks if two matricies are equals and returns that bool.
+ */
+bool Matrix::operator==(Matrix other) const {
 	if (this->RowVecs == other.RowVecs) {
 		return true;
 	} else {
@@ -339,6 +359,60 @@ int Matrix::getNumRows() const {
 */
 bool Matrix::isMultipliable(const Matrix& other) const {
 	return this->nCols == other.nRows;
+}
+
+/*[Function Type] Helpper Math
+* [Purpose] Checks if the matrix is nxn
+*/
+bool Matrix::isSquare() const {
+	return nCols == nRows;
+}
+
+/****************************MATH*****************************/
+
+/*[Function Type] Math
+* [Purpose] Finds the determinate of this matrix, using recursive formula. (A:nxn, det(A) = sum^{n-1}_{i=0} a_{i0}(-1)^{i+0}det(M_{i0}), since j = 0 for top row).
+*/
+int Matrix::findDeterminant() const {
+	if (isSquare()) {
+		if (nRows == 2) {
+			return RowVecs[0][0] * RowVecs[1][1] - RowVecs[0][1] * RowVecs[1][0]; // Determinant of 2x2 matrix
+		} else {
+			int sum = 0;
+			for (int j = 0; j < nCols; j++) { // Loops through top elements
+				if (RowVecs[0][j] != 0) { // since that value would make it 0 anyways
+					if (j % 2 == 0) { // (-1)^i+0 part of formula
+						sum += RowVecs[0][j] * findMinor(0, j).findDeterminant(); //a_ij * |Mij| part of formula
+					} else {
+						sum -= RowVecs[0][j] * findMinor(0, j).findDeterminant(); //a_ij * |Mij| part of formula
+					}
+				}
+			}// For Loop
+			return sum;
+		} //else
+	} // is Square
+}
+
+/*[Function Type] Math
+* [Purpose] Finds the Transpose of the matrix (For all a_ij in this matrix, All a_ij in the transpose = a_ji in this matrix.)
+*/
+Matrix Matrix::findTranspose() const {
+	Matrix res(nCols, nRows);
+	res.ColVecs = this->RowVecs;
+	res.RowVecs = this->ColVecs;
+
+	return res;
+}
+
+/*[Function Type] Math
+* [Purpose] Finds the minor M_ij of this matrix. M_ij is the matrix you get when you remove the row and column a_ij is in.
+*/
+Matrix Matrix::findMinor(int i, int j) const {
+	Matrix res(*this);  // Makes Copy of Matrix
+	res.eraseRow(i);    // Erases Row i and column j
+	res.eraseColumn(j);
+
+	return res;
 }
 
 /***********************MISC UTILITY**************************/

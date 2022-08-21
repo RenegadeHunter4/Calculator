@@ -39,7 +39,9 @@ int main() {
 		Add,
 		Scale,
 		Multiply,
-		AreEqual
+		AreEqual,
+		FindDeterminant,
+		FindTranspose
 	};
 
 	// Initalize variables before menu
@@ -64,6 +66,8 @@ int main() {
 					  << Scale <<"): Multiplies Matricy by scaler" << std::endl
 					  << Multiply << "): Multiplies Two Matricies" << std::endl
 					  << AreEqual << "): Checks If Two Matricies Are Equal" << std::endl
+					  << FindDeterminant << "): Finds Determinate of Matrix" << std::endl
+					  << FindTranspose << "): Finds Transpose of Matrix" << std::endl
 			          << std::endl;
 		} else {
 			switch (std::stoi(input)) {
@@ -111,7 +115,7 @@ int main() {
 				matricies[matricies.size() - 1].print();
 				break;
 
-			// Multiplies Matricies
+				// Multiplies Matricies
 			case Multiply:
 				std::cout << "Which Matricies Do You Want To Multiply? ";
 				std::cin >> i >> j;
@@ -122,6 +126,8 @@ int main() {
 					std::cout << "lhs.numCols must equal rhs.numRows";
 				}
 				break;
+
+				// Checks if Matricies are equal
 			case AreEqual:
 				std::cout << "Which Matricies Do You Want To Check? ";
 				std::cin >> i >> j;
@@ -130,6 +136,24 @@ int main() {
 				} else {
 					std::cout << "Matrix " << i << " does not equal " << j << std::endl;
 				}
+				break;
+
+				// Finds Determinate of matrix
+			case FindDeterminant:
+				std::cout << "Which Matrix Do You Want To Find The Determinant Of?";
+				std::cin >> i;
+				if (matricies[std::stoi(i)].isSquare()) {
+					std::cout << "The Determinant of Matrix " << i << " is " << matricies[std::stoi(i)].findDeterminant() << std::endl;
+				} else {
+					std::cout << "Determinants are only defined for square matricies";
+				}
+				break;
+
+				// Finds Transpose of Matrix
+			case FindTranspose:
+				std::cout << "Which Matrix Do You Want To Find The Transpose Of? ";
+				std::cin >> i;
+				matricies[std::stoi(i)].findTranspose().print();
 				break;
 			}
 		}

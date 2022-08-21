@@ -5,14 +5,15 @@
 class Matrix {
 // Variables
 private:
-	int nRows = 1;
-	int nCols = 1;
+	int nRows = 0;
+	int nCols = 0;
 	std::vector<std::vector<int>> ColVecs;
 	std::vector<std::vector<int>> RowVecs;
 
 // Functions
 public:
 	// Constructor/Destructor
+	Matrix();
 	Matrix(int n, int m, int value);
 	Matrix(int n, int m);
 	Matrix(std::vector<std::vector<int>> ColVecs);
@@ -29,7 +30,7 @@ public:
 	Matrix& operator*=(int scaler); // Scalar & equal Multiplication
 	Matrix& operator*=(Matrix rhs); // Scalar & equal Multiplication
 	Matrix& operator-=(Matrix other); //Subtraction & equal Operator
-	bool operator==(Matrix other); //if equal Operator
+	bool operator==(Matrix other) const; //if equal Operator
 
 	// Getting/Setting Matrix Elements
 	void setElement(int row, int col, int value);
@@ -48,8 +49,12 @@ public:
 
 	// Checks For Math
 	bool isMultipliable(const Matrix& other) const;
+	bool isSquare() const;
 
 	// Math
+	int findDeterminant() const;
+	Matrix findTranspose() const;
+	Matrix findMinor(int i, int j) const;
 
 	// Misc. Utility
 	void print() const;
