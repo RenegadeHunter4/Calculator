@@ -405,6 +405,16 @@ int Matrix::findDeterminant() const {
 	} // is Square
 }
 
+int Matrix::findTrace() const {
+	if (isSquare()) {
+		int sum = 0;
+		for (int i = 0; i < nRows; i++) {
+			sum += RowVecs[i][i];
+		}
+		return sum;
+	}
+}
+
 /*[Function Type] Math
 * [Purpose] Finds the Transpose of the matrix (For all a_ij in this matrix, All a_ij in the transpose = a_ji in this matrix.)
 */

@@ -54,6 +54,7 @@ public:
 
 	// Math
 	int findDeterminant() const;
+	int findTrace() const;
 	Matrix findTranspose() const;
 	Matrix findMinor(int i, int j) const;
 
