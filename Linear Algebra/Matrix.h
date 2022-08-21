@@ -24,7 +24,7 @@ public:
 	std::vector<int> operator[](int i) const; //Element Access Operator
 	Matrix operator+(Matrix other) const; //Addition Operator
 	Matrix operator*(int scaler) const; // Scalar Multiplication
-	Matrix operator*(Matrix rhs) const; // Scalar Multiplication
+	Matrix operator*(Matrix rhs) const; // Matrix  Multiplication
 	Matrix operator-(Matrix other) const; //Subtraction Operator
 	Matrix& operator+=(Matrix other); //Addition & equal Operator
 	Matrix& operator*=(int scaler); // Scalar & equal Multiplication
@@ -50,6 +50,7 @@ public:
 	// Checks For Math
 	bool isMultipliable(const Matrix& other) const;
 	bool isSquare() const;
+	bool isInvertiable() const;
 
 	// Math
 	int findDeterminant() const;

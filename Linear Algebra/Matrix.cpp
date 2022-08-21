@@ -1,11 +1,6 @@
 #include "Matrix.h"
 #include <stdexcept>
 
-void term_func() {
-	std::cout << "term_func was called by terminate." << std::endl;
-	exit(-1);
-}
-
 /***********************CONSTRUCTORS**************************/
 /* [Function Type] Default Constructor
  * [Purpose] Creates empty matrix with size 0.
@@ -196,6 +191,8 @@ Matrix& Matrix::operator*=(Matrix rhs) {
 	Matrix product(res);
 	this->ColVecs = product.ColVecs;
 	this->RowVecs = product.RowVecs;
+	this->nCols = product.nCols;
+	this->nRows = product.nRows;
 	return *this;
 }
 
@@ -352,20 +349,35 @@ int Matrix::getNumRows() const {
 	return nRows;
 }
 
-/************************HELPER MATH***************************/
+/************************MATH CHECKS***************************/
 
-/*[Function Type] Helpper Math
+/*[Function Type] Math Checks
 * [Purpose] Returns rather this matrix can be multiplied with the other on it's lhs. [this * other] not [other * this].
 */
 bool Matrix::isMultipliable(const Matrix& other) const {
 	return this->nCols == other.nRows;
 }
 
-/*[Function Type] Helpper Math
+/*[Function Type] Math Checks
 * [Purpose] Checks if the matrix is nxn
 */
 bool Matrix::isSquare() const {
 	return nCols == nRows;
+}
+
+/*[Function Type] Math Checks
+* [Purpose] Checks if the matrix is invertiable
+*/
+bool Matrix::isInvertiable() const {
+	if (isSquare()) {
+		if (findDeterminant() == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
 }
 
 /****************************MATH*****************************/
