@@ -133,6 +133,83 @@ Matrix Matrix::operator-(Matrix other) const {
 	}
 }
 
+Matrix& Matrix::operator+=(Matrix other) {
+	if (other.nCols == this->nCols && other.nRows == this->nRows) {
+		std::vector<std::vector<int>> res;
+		for (int i = 0; i < nCols; i++) {
+			std::vector<int> colVec;
+			for (int j = 0; j < nRows; j++) {
+				colVec.push_back(this->ColVecs[i][j] + other.ColVecs[i][j]);
+			}
+			res.push_back(colVec);
+		}
+		Matrix sum(res);
+		this->ColVecs = sum.ColVecs;
+		this->RowVecs = sum.RowVecs;
+		return *this;
+	}
+}
+
+Matrix& Matrix::operator*=(int scaler) {
+	std::vector<std::vector<int>> res;
+	for (int i = 0; i < nCols; i++) {
+		std::vector<int> colVec;
+		for (int j = 0; j < nRows; j++) {
+			colVec.push_back(this->ColVecs[i][j] * scaler);
+		}
+		res.push_back(colVec);
+	}
+
+	Matrix scaled(res);
+	this->ColVecs = scaled.ColVecs;
+	this->RowVecs = scaled.RowVecs;
+	return *this;
+}
+
+Matrix& Matrix::operator*=(Matrix rhs) {
+	Matrix res(this->nRows, rhs.nCols);
+	if (this->isMultipliable(rhs)) {
+		for (int i = 0; i < this->nRows; i++) {
+			for (int j = 0; j < rhs.nCols; j++) {
+				int sum = 0;
+				for (int k = 0; k < this->nCols; k++) {
+					sum += this->RowVecs[i][k] * rhs.ColVecs[j][k];
+				}
+				res.setElement(i, j, sum);
+			}
+		}
+	}
+	Matrix product(res);
+	this->ColVecs = product.ColVecs;
+	this->RowVecs = product.RowVecs;
+	return *this;
+}
+
+Matrix& Matrix::operator-=(Matrix other) {
+	if (other.nCols == this->nCols && other.nRows == this->nRows) {
+		std::vector<std::vector<int>> res;
+		for (int i = 0; i < nCols; i++) {
+			std::vector<int> colVec;
+			for (int j = 0; j < nRows; j++) {
+				colVec.push_back(this->ColVecs[i][j] - other.ColVecs[i][j]);
+			}
+			res.push_back(colVec);
+		}
+		Matrix difference(res);
+		this->ColVecs = difference.ColVecs;
+		this->RowVecs = difference.RowVecs;
+		return *this;
+	}
+}
+
+bool Matrix::operator==(Matrix other) {
+	if (this->RowVecs == other.RowVecs) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 /***********************GETTERS & SETTERS**************************/
 /* [Function Type] Setter
  * [Purpose] Sets the Element at row row and col col, to value.

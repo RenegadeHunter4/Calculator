@@ -38,7 +38,8 @@ int main() {
 		Print,
 		Add,
 		Scale,
-		Multiply
+		Multiply,
+		AreEqual
 	};
 
 	// Initalize variables before menu
@@ -62,6 +63,7 @@ int main() {
 					  << Add << "): Adds Two Matricies" << std::endl
 					  << Scale <<"): Multiplies Matricy by scaler" << std::endl
 					  << Multiply << "): Multiplies Two Matricies" << std::endl
+					  << AreEqual << "): Checks If Two Matricies Are Equal" << std::endl
 			          << std::endl;
 		} else {
 			switch (std::stoi(input)) {
@@ -90,7 +92,7 @@ int main() {
 			case Add:
 				std::cout << "Which Matricies Do You Want To Add? ";
 				std::cin >> i >> j;
-				matricies.push_back(matricies[std::stoi(i)] + matricies[std::stoi(j)]);
+				matricies.push_back(matricies[std::stoi(i)] += matricies[std::stoi(j)]);
 				matricies[matricies.size() - 1].print();
 				break;
 
@@ -118,6 +120,15 @@ int main() {
 					matricies[matricies.size() - 1].print();
 				} else {
 					std::cout << "lhs.numCols must equal rhs.numRows";
+				}
+				break;
+			case AreEqual:
+				std::cout << "Which Matricies Do You Want To Check? ";
+				std::cin >> i >> j;
+				if (matricies[std::stoi(i)] == (matricies[std::stoi(j)])) {
+					std::cout << "Matrix " << i << " equals " << j << std::endl;
+				} else {
+					std::cout << "Matrix " << i << " does not equal " << j << std::endl;
 				}
 				break;
 			}
