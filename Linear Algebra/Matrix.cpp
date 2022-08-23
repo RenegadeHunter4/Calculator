@@ -32,7 +32,7 @@ Matrix::Matrix(int n, int m) :
  * [Purpose] Builds matrix based on a vector of vectors.
  * [Assumes] All the Vectors in ColVecs must be the same size.
  */
-Matrix::Matrix(std::vector<std::vector<int>> ColVecs) : 
+Matrix::Matrix(std::vector<std::vector<int>>& ColVecs) : 
 	ColVecs(ColVecs) {
 	nCols = ColVecs.size();
 	nRows = ColVecs[0].size();
@@ -67,7 +67,7 @@ std::vector<int> Matrix::operator[](int i)  const {
 /* [Function Type] Operator Overload
  * [Purpose] Adds two matricies together and returns the answer as a third matrix.
  */
-Matrix Matrix::operator+(const Matrix other) const {
+Matrix Matrix::operator+(const Matrix& other) const {
 	if(other.nCols == this->nCols && other.nRows == this->nRows) {
 		std::vector<std::vector<int>> res;
 		for (int i = 0; i < nCols; i++) {
@@ -100,7 +100,7 @@ Matrix Matrix::operator*(int scaler) const {
 /* [Function Type] Operator Overload
  * [Purpose] Multiplies two matricies together using normal matrix multiplication. Returns a 0 matrix if the matricies weren't multipliable
  */
-Matrix Matrix::operator*(Matrix rhs) const {
+Matrix Matrix::operator*(const Matrix& rhs) const {
 	Matrix res(this->nRows, rhs.nCols);
 	if (this->isMultipliable(rhs)) {
 		for (int i = 0; i < this->nRows; i++) {
@@ -119,7 +119,7 @@ Matrix Matrix::operator*(Matrix rhs) const {
 /* [Function Type] Operator Overload
  * [Purpose] Subtracts two matricies and returns the answer as a third matrix.
  */
-Matrix Matrix::operator-(Matrix other) const {
+Matrix Matrix::operator-(const Matrix& other) const {
 	if (other.nCols == this->nCols && other.nRows == this->nRows) {
 		std::vector<std::vector<int>> res;
 		for (int i = 0; i < nCols; i++) {
@@ -136,7 +136,7 @@ Matrix Matrix::operator-(Matrix other) const {
 /* [Function Type] Operator Overload
  * [Purpose] Adds two matricies and sets it equal to this matrix (rhs += lhs is short for rhs = rhs + lhs).
  */
-Matrix& Matrix::operator+=(Matrix other) {
+Matrix& Matrix::operator+=(const Matrix& other) {
 	if (other.nCols == this->nCols && other.nRows == this->nRows) {
 		std::vector<std::vector<int>> res;
 		for (int i = 0; i < nCols; i++) {
@@ -175,7 +175,7 @@ Matrix& Matrix::operator*=(int scaler) {
 /* [Function Type] Operator Overload
  * [Purpose] Multiplies two matricies and sets it equal to this matrix (rhs *= lhs is short for rhs = rhs * lhs).
  */
-Matrix& Matrix::operator*=(Matrix rhs) {
+Matrix& Matrix::operator*=(const Matrix& rhs) {
 	Matrix res(this->nRows, rhs.nCols);
 	if (this->isMultipliable(rhs)) {
 		for (int i = 0; i < this->nRows; i++) {
@@ -199,7 +199,7 @@ Matrix& Matrix::operator*=(Matrix rhs) {
 /* [Function Type] Operator Overload
  * [Purpose] Subtracts a matrix from the matrix on the left (rhs -= lhs is short for rhs = rhs - lhs).
  */
-Matrix& Matrix::operator-=(Matrix other) {
+Matrix& Matrix::operator-=(const Matrix& other) {
 	if (other.nCols == this->nCols && other.nRows == this->nRows) {
 		std::vector<std::vector<int>> res;
 		for (int i = 0; i < nCols; i++) {
@@ -219,7 +219,7 @@ Matrix& Matrix::operator-=(Matrix other) {
 /* [Function Type] Operator Overload
  * [Purpose] Checks if two matricies are equals and returns that bool.
  */
-bool Matrix::operator==(Matrix other) const {
+bool Matrix::operator==(const Matrix& other) const {
 	if (this->RowVecs == other.RowVecs) {
 		return true;
 	} else {

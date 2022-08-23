@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Matrix.h"
+#include "ComplexNum.h"
 
 std::vector<Matrix> matricies;
 
@@ -41,7 +42,8 @@ int main() {
 		Multiply,
 		AreEqual,
 		FindDeterminant,
-		FindTranspose
+		FindTranspose,
+		ComplexNumTest
 	};
 
 	// Initalize variables before menu
@@ -51,6 +53,8 @@ int main() {
 	int index = 0;
 	bool running = true;
 	std::vector<int> vec(3,3);
+	ComplexNum<double> a(3, 3);
+	ComplexNum<double> b(4, 4);
 
 	// Menu
 	while (running) {
@@ -68,6 +72,7 @@ int main() {
 					  << AreEqual << "): Checks If Two Matricies Are Equal" << std::endl
 					  << FindDeterminant << "): Finds Determinate of Matrix" << std::endl
 					  << FindTranspose << "): Finds Transpose of Matrix" << std::endl
+					  << ComplexNumTest << "): Run Test Code for Complex Numbers Class" << std::endl
 			          << std::endl;
 		} else {
 			switch (std::stoi(input)) {
@@ -155,6 +160,30 @@ int main() {
 				std::cin >> i;
 				matricies[std::stoi(i)].findTranspose().print();
 				break;
+
+				// Runs Test Code For Complex Number Class
+			case ComplexNumTest:
+				a += b;
+				a.print();
+				a -= b;
+				a.print();
+				a *= b;
+				a.print();
+				a /= b;
+				a.print();
+				a += 2;
+				a.print();
+				a -= 2;
+				a.print();
+				a *= 2;
+				a.print();
+				a /= 2;
+				a.print();
+
+				std::cout << a.getAbsoluteValue() << std::endl;
+				a.getAdditiveInverse().print();
+				a.getMultiplicativeInverse().print();
+				a.getConjugate().print();
 			}
 		}
 	}

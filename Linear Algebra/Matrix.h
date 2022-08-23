@@ -16,21 +16,21 @@ public:
 	Matrix();
 	Matrix(int n, int m, int value);
 	Matrix(int n, int m);
-	Matrix(std::vector<std::vector<int>> ColVecs);
+	Matrix(std::vector<std::vector<int>>& ColVecs);
 	Matrix(const Matrix& other);
 	~Matrix() = default;
 
 	// Operator Overload
 	std::vector<int> operator[](int i) const; //Element Access Operator
-	Matrix operator+(Matrix other) const; //Addition Operator
+	Matrix operator+(const Matrix& other) const; //Addition Operator
 	Matrix operator*(int scaler) const; // Scalar Multiplication
-	Matrix operator*(Matrix rhs) const; // Matrix  Multiplication
-	Matrix operator-(Matrix other) const; //Subtraction Operator
-	Matrix& operator+=(Matrix other); //Addition & equal Operator
+	Matrix operator*(const Matrix& rhs) const; // Matrix  Multiplication
+	Matrix operator-(const Matrix& other) const; //Subtraction Operator
+	Matrix& operator+=(const Matrix& other); //Addition & equal Operator
 	Matrix& operator*=(int scaler); // Scalar & equal Multiplication
-	Matrix& operator*=(Matrix rhs); // Scalar & equal Multiplication
-	Matrix& operator-=(Matrix other); //Subtraction & equal Operator
-	bool operator==(Matrix other) const; //if equal Operator
+	Matrix& operator*=(const Matrix& rhs); // Scalar & equal Multiplication
+	Matrix& operator-=(const Matrix& other); //Subtraction & equal Operator
+	bool operator==(const Matrix& other) const; //if equal Operator
 
 	// Getting/Setting Matrix Elements
 	void setElement(int row, int col, int value);
