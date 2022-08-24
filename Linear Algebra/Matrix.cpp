@@ -69,15 +69,15 @@ std::vector<int> Matrix::operator[](int i)  const {
  */
 Matrix Matrix::operator+(const Matrix& other) const {
 	if(other.nCols == this->nCols && other.nRows == this->nRows) {
-		std::vector<std::vector<int>> res;
+		Matrix res;
 		for (int i = 0; i < nCols; i++) {
 			std::vector<int> colVec;
 			for (int j = 0; j < nRows; j++) {
 				colVec.push_back(this->ColVecs[i][j] + other.ColVecs[i][j]);
 			}
-			res.push_back(colVec);
+			res.pushBackColumn(colVec);
 		}
-		return Matrix(res);
+		return res;
 	}
 }
 
@@ -85,32 +85,34 @@ Matrix Matrix::operator+(const Matrix& other) const {
  * [Purpose] Multiplies each element of a matrix by a scaler and then returns the matrix.
  */
 Matrix Matrix::operator*(int scaler) const {
-	std::vector<std::vector<int>> res;
+	Matrix res;
 	for (int i = 0; i < nCols; i++) {
 		std::vector<int> colVec;
 		for (int j = 0; j < nRows; j++) {
 			colVec.push_back(this->ColVecs[i][j] * scaler);
 		}
-		res.push_back(colVec);
+		res.pushBackColumn(colVec);
 	}
 
-	return Matrix(res);
+	return res;
 }
 
 /* [Function Type] Operator Overload
  * [Purpose] Multiplies two matricies together using normal matrix multiplication. Returns a 0 matrix if the matricies weren't multipliable
  */
 Matrix Matrix::operator*(const Matrix& rhs) const {
-	Matrix res(this->nRows, rhs.nCols);
+	Matrix res;
 	if (this->isMultipliable(rhs)) {
 		for (int i = 0; i < this->nRows; i++) {
+			std::vector<int> rowVec;
 			for (int j = 0; j < rhs.nCols; j++) {
 				int sum = 0;
 				for (int k = 0; k < this->nCols; k++) {
 					sum += this->RowVecs[i][k] * rhs.ColVecs[j][k];
 				}
-				res.setElement(i, j, sum);
+				rowVec.push_back(sum);
 			}
+			res.pushBackRow(rowVec);
 		}	
 	} 
 	return res;
@@ -121,15 +123,15 @@ Matrix Matrix::operator*(const Matrix& rhs) const {
  */
 Matrix Matrix::operator-(const Matrix& other) const {
 	if (other.nCols == this->nCols && other.nRows == this->nRows) {
-		std::vector<std::vector<int>> res;
+		Matrix res;
 		for (int i = 0; i < nCols; i++) {
 			std::vector<int> colVec;
 			for (int j = 0; j < nRows; j++) {
 				colVec.push_back(this->ColVecs[i][j] - other.ColVecs[i][j]);
 			}
-			res.push_back(colVec);
+			res.pushBackColumn(colVec);
 		}
-		return Matrix(res);
+		return res;
 	}
 }
 
@@ -138,17 +140,13 @@ Matrix Matrix::operator-(const Matrix& other) const {
  */
 Matrix& Matrix::operator+=(const Matrix& other) {
 	if (other.nCols == this->nCols && other.nRows == this->nRows) {
-		std::vector<std::vector<int>> res;
-		for (int i = 0; i < nCols; i++) {
+		for (int i = 0; i < nRows; i++) {
 			std::vector<int> colVec;
-			for (int j = 0; j < nRows; j++) {
-				colVec.push_back(this->ColVecs[i][j] + other.ColVecs[i][j]);
+			for (int j = 0; j < nCols; j++) {
+				RowVecs[i][j] += other.RowVecs[i][j];
+				ColVecs[j][i] += other.RowVecs[i][j];
 			}
-			res.push_back(colVec);
 		}
-		Matrix sum(res);
-		this->ColVecs = sum.ColVecs;
-		this->RowVecs = sum.RowVecs;
 		return *this;
 	}
 }
@@ -158,17 +156,13 @@ Matrix& Matrix::operator+=(const Matrix& other) {
  */
 Matrix& Matrix::operator*=(int scaler) {
 	std::vector<std::vector<int>> res;
-	for (int i = 0; i < nCols; i++) {
+	for (int i = 0; i < nRows; i++) {
 		std::vector<int> colVec;
-		for (int j = 0; j < nRows; j++) {
-			colVec.push_back(this->ColVecs[i][j] * scaler);
+		for (int j = 0; j < nCols; j++) {
+			RowVecs[i][j] *= scaler;
+			ColVecs[j][i] *= scaler;
 		}
-		res.push_back(colVec);
 	}
-
-	Matrix scaled(res);
-	this->ColVecs = scaled.ColVecs;
-	this->RowVecs = scaled.RowVecs;
 	return *this;
 }
 
@@ -176,23 +170,24 @@ Matrix& Matrix::operator*=(int scaler) {
  * [Purpose] Multiplies two matricies and sets it equal to this matrix (rhs *= lhs is short for rhs = rhs * lhs).
  */
 Matrix& Matrix::operator*=(const Matrix& rhs) {
-	Matrix res(this->nRows, rhs.nCols);
+	Matrix res;
 	if (this->isMultipliable(rhs)) {
 		for (int i = 0; i < this->nRows; i++) {
+			std::vector<int> rowvec;
 			for (int j = 0; j < rhs.nCols; j++) {
 				int sum = 0;
 				for (int k = 0; k < this->nCols; k++) {
 					sum += this->RowVecs[i][k] * rhs.ColVecs[j][k];
 				}
-				res.setElement(i, j, sum);
+				rowvec.push_back(sum);
 			}
+			res.pushBackRow(rowvec);
 		}
 	}
-	Matrix product(res);
-	this->ColVecs = product.ColVecs;
-	this->RowVecs = product.RowVecs;
-	this->nCols = product.nCols;
-	this->nRows = product.nRows;
+	this->ColVecs = res.ColVecs;
+	this->RowVecs = res.RowVecs;
+	this->nCols = res.nCols;
+	this->nRows = res.nRows;
 	return *this;
 }
 
@@ -201,17 +196,13 @@ Matrix& Matrix::operator*=(const Matrix& rhs) {
  */
 Matrix& Matrix::operator-=(const Matrix& other) {
 	if (other.nCols == this->nCols && other.nRows == this->nRows) {
-		std::vector<std::vector<int>> res;
-		for (int i = 0; i < nCols; i++) {
+		for (int i = 0; i < nRows; i++) {
 			std::vector<int> colVec;
-			for (int j = 0; j < nRows; j++) {
-				colVec.push_back(this->ColVecs[i][j] - other.ColVecs[i][j]);
+			for (int j = 0; j < nCols; j++) {
+				RowVecs[i][j] -= other.RowVecs[i][j];
+				ColVecs[j][i] -= other.RowVecs[i][j];
 			}
-			res.push_back(colVec);
 		}
-		Matrix difference(res);
-		this->ColVecs = difference.ColVecs;
-		this->RowVecs = difference.RowVecs;
 		return *this;
 	}
 }
@@ -220,11 +211,8 @@ Matrix& Matrix::operator-=(const Matrix& other) {
  * [Purpose] Checks if two matricies are equals and returns that bool.
  */
 bool Matrix::operator==(const Matrix& other) const {
-	if (this->RowVecs == other.RowVecs) {
-		return true;
-	} else {
-		return false;
-	}
+	if (this->RowVecs == other.RowVecs) return true;
+	return false;
 }
 
 /***********************GETTERS & SETTERS**************************/
@@ -233,20 +221,9 @@ bool Matrix::operator==(const Matrix& other) const {
  */
 void Matrix::setElement(int row, int col, int value) {
 	if (row < nRows && col < nCols) {
-		std::vector<int> temp = RowVecs[row];		   // Copies Matrix Column i to temp
-		temp.erase(temp.begin() + col);
-		temp.insert(temp.begin() + col, value);	   // Sets the jth position of temp to value
-		RowVecs.erase(RowVecs.begin() + row);		   // Sets the ith position of matrix to temp
-		RowVecs.insert(RowVecs.begin() + row, temp);
-
-		// Does the same thing for Colvecs
-		temp = ColVecs[col];		   
-		temp.erase(temp.begin() + row);
-		temp.insert(temp.begin() + row, value);	   
-		ColVecs.erase(ColVecs.begin() + col);		   
-		ColVecs.insert(ColVecs.begin() + col, temp);
+		RowVecs[row][col] = value;
+		ColVecs[col][row] = value;
 	}
-	
 }
 
 /*[Function Type] Setter
@@ -254,7 +231,14 @@ void Matrix::setElement(int row, int col, int value) {
 */
 void Matrix::pushBackRow(std::vector<int> row) {
 	RowVecs.push_back(row);
-
+	if (nCols == 0) {
+		nCols = row.size();
+		for (int i = 0; i < nCols; i++) {
+			std::vector<int> temp;
+			temp.push_back(row[i]);
+			ColVecs.push_back(temp);
+		}
+	}
 	for (int i = 0; i < nCols; i++) {
 		ColVecs[i].push_back(row[i]);
 	}
@@ -266,9 +250,18 @@ void Matrix::pushBackRow(std::vector<int> row) {
 */
 void Matrix::pushBackColumn(std::vector<int> column) {
 	ColVecs.push_back(column);
-
-	for (int i = 0; i < nRows; i++) {
-		RowVecs[i].push_back(column[i]);
+	if (nRows == 0) {
+		nRows = column.size();
+		for (int i = 0; i < nRows; i++) 
+		{
+			std::vector<int> temp;
+			temp.push_back(column[i]);
+			RowVecs.push_back(temp);
+		}
+	} else {
+		for (int i = 0; i < nRows; i++) {
+			RowVecs[i].push_back(column[i]);
+		}
 	}
 	nCols++;
 }
@@ -278,7 +271,6 @@ void Matrix::pushBackColumn(std::vector<int> column) {
 */
 void Matrix::insertRow(int pos, std::vector<int> row) {
 	RowVecs.insert(RowVecs.begin() + pos, row);
-
 	for (int i = 0; i < nCols; i++) {
 		ColVecs[i].insert(ColVecs[i].begin() + pos, row[i]);
 	}
@@ -369,15 +361,9 @@ bool Matrix::isSquare() const {
 * [Purpose] Checks if the matrix is invertiable
 */
 bool Matrix::isInvertiable() const {
-	if (isSquare()) {
-		if (findDeterminant() == 0) {
-			return true;
-		} else {
-			return false;
-		}
-	} else {
-		return false;
-	}
+	if (!isSquare()) return false; 
+	if (findDeterminant() == 0) return false; 
+	return true;
 }
 
 /****************************MATH*****************************/
@@ -399,10 +385,10 @@ int Matrix::findDeterminant() const {
 						sum -= RowVecs[0][j] * findMinor(0, j).findDeterminant(); //a_ij * |Mij| part of formula
 					}
 				}
-			}// For Loop
+			}
 			return sum;
-		} //else
-	} // is Square
+		} 
+	} 
 }
 
 int Matrix::findTrace() const {
@@ -449,4 +435,52 @@ void Matrix::print() const {
 		std::cout << std::endl;
 	}
 	std::cout << std::endl;
+}
+
+/*********************PRIVATE HELLPER*************************/
+
+void Matrix::EROSwap(int row1, int row2) {
+	std::iter_swap(RowVecs.begin() + row1, RowVecs.begin() + row2);
+	for (int i = 0; i < nCols; i++) {
+		std::iter_swap(ColVecs[i].begin() + row1, ColVecs[i].begin() + row2);
+	}
+}
+
+void Matrix::EROScale(int row, int scaler) {
+	for (int i = 0; i < nCols; i++) {
+		RowVecs[row][i] *= scaler;
+		ColVecs[i][row] *= scaler;
+	}
+}
+
+void Matrix::EROAdd(int row1, int row2, int scaler) {
+	std::vector<int> temp = RowVecs[row1];
+	for (int i = 0; i < nCols; i++) {
+		temp[i] *= scaler;
+		RowVecs[row2][i] += temp[i];
+		ColVecs[i][row2] += temp[i];
+	}
+}
+
+void Matrix::ECOSwap(int col1, int col2) {
+	std::iter_swap(ColVecs.begin() + col1, ColVecs.begin() + col2);
+	for (int i = 0; i < nRows; i++) {
+		std::iter_swap(RowVecs[i].begin() + col1, RowVecs[i].begin() + col2);
+	}
+}
+
+void Matrix::ECOScale(int col, int scaler) {
+	for (int i = 0; i < nRows; i++) {
+		RowVecs[i][col] *= scaler;
+		ColVecs[col][i] *= scaler;
+	}
+}
+
+void Matrix::ECOAdd(int col1, int col2, int scaler) {
+	std::vector<int> temp = ColVecs[col1];
+	for (int i = 0; i < nRows; i++) {
+		temp[i] *= scaler;
+		RowVecs[i][col2] += temp[i];
+		ColVecs[col2][i] += temp[i];
+	}
 }

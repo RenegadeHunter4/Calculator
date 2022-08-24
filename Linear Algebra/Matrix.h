@@ -60,6 +60,15 @@ public:
 
 	// Misc. Utility
 	void print() const;
-private:
+
+	// Elementary Row Operations
+	void EROSwap(int row1, int row2);
+	void EROScale(int row, int scaler);
+	void EROAdd(int row1, int row2, int scaler);
+
+	// Elementary Column Operations
+	void ECOSwap(int col1, int col2);
+	void ECOScale(int col, int scaler);
+	void ECOAdd(int col1, int col2, int scaler);
 };
 

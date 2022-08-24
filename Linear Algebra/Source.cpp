@@ -43,12 +43,14 @@ int main() {
 		AreEqual,
 		FindDeterminant,
 		FindTranspose,
-		ComplexNumTest
+		ComplexNumTest,
+		SwapRows
 	};
 
 	// Initalize variables before menu
 	std::string i = "0";
 	std::string j = "0";
+	std::string k = "0";
 	std::string input;
 	int index = 0;
 	bool running = true;
@@ -73,6 +75,7 @@ int main() {
 					  << FindDeterminant << "): Finds Determinate of Matrix" << std::endl
 					  << FindTranspose << "): Finds Transpose of Matrix" << std::endl
 					  << ComplexNumTest << "): Run Test Code for Complex Numbers Class" << std::endl
+					  << SwapRows << "): Swaps two rows in the Matrix" << std::endl
 			          << std::endl;
 		} else {
 			switch (std::stoi(input)) {
@@ -101,7 +104,7 @@ int main() {
 			case Add:
 				std::cout << "Which Matricies Do You Want To Add? ";
 				std::cin >> i >> j;
-				matricies.push_back(matricies[std::stoi(i)] += matricies[std::stoi(j)]);
+				matricies.push_back(matricies[std::stoi(i)] + matricies[std::stoi(j)]);
 				matricies[matricies.size() - 1].print();
 				break;
 
@@ -125,7 +128,7 @@ int main() {
 				std::cout << "Which Matricies Do You Want To Multiply? ";
 				std::cin >> i >> j;
 				if (matricies[std::stoi(i)].isMultipliable(matricies[std::stoi(j)])) {
-					matricies.push_back(matricies[std::stoi(i)] * matricies[std::stoi(j)]);
+					matricies.push_back(matricies[std::stoi(i)] *= matricies[std::stoi(j)]);
 					matricies[matricies.size() - 1].print();
 				} else {
 					std::cout << "lhs.numCols must equal rhs.numRows";
@@ -145,7 +148,7 @@ int main() {
 
 				// Finds Determinate of matrix
 			case FindDeterminant:
-				std::cout << "Which Matrix Do You Want To Find The Determinant Of?";
+				std::cout << "Which Matrix Do You Want To Find The Determinant Of? ";
 				std::cin >> i;
 				if (matricies[std::stoi(i)].isSquare()) {
 					std::cout << "The Determinant of Matrix " << i << " is " << matricies[std::stoi(i)].findDeterminant() << std::endl;
