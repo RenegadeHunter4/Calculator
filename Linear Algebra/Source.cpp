@@ -2,6 +2,7 @@
 #include <string>
 #include "Matrix.h"
 #include "ComplexNum.h"
+#include "NumberTheory.h"
 
 std::vector<Matrix> matricies;
 
@@ -44,7 +45,7 @@ int main() {
 		FindDeterminant,
 		FindTranspose,
 		ComplexNumTest,
-		SwapRows
+		NumberTheoryTest
 	};
 
 	// Initalize variables before menu
@@ -75,7 +76,7 @@ int main() {
 					  << FindDeterminant << "): Finds Determinate of Matrix" << std::endl
 					  << FindTranspose << "): Finds Transpose of Matrix" << std::endl
 					  << ComplexNumTest << "): Run Test Code for Complex Numbers Class" << std::endl
-					  << SwapRows << "): Swaps two rows in the Matrix" << std::endl
+					  << NumberTheoryTest << "): Runs Test Code for Number Theory Test" << std::endl
 			          << std::endl;
 		} else {
 			switch (std::stoi(input)) {
@@ -128,7 +129,7 @@ int main() {
 				std::cout << "Which Matricies Do You Want To Multiply? ";
 				std::cin >> i >> j;
 				if (matricies[std::stoi(i)].isMultipliable(matricies[std::stoi(j)])) {
-					matricies.push_back(matricies[std::stoi(i)] *= matricies[std::stoi(j)]);
+					matricies.push_back(matricies[std::stoi(i)] * matricies[std::stoi(j)]);
 					matricies[matricies.size() - 1].print();
 				} else {
 					std::cout << "lhs.numCols must equal rhs.numRows";
@@ -166,27 +167,49 @@ int main() {
 
 				// Runs Test Code For Complex Number Class
 			case ComplexNumTest:
-				a += b;
+				std::cout << "a: ";
 				a.print();
-				a -= b;
-				a.print();
-				a *= b;
-				a.print();
-				a /= b;
-				a.print();
-				a += 2;
-				a.print();
-				a -= 2;
-				a.print();
-				a *= 2;
-				a.print();
-				a /= 2;
+				std::cout << "b: ";
+				b.print();
+				std::cout << "a+=b: ";
+				a += b;			  
+				a.print();		  
+				std::cout << "a-=b: ";
+				a -= b;			  
+				a.print();		  
+				std::cout << "a*=b: ";
+				a *= b;			  
+				a.print();		  
+				std::cout << "a/=b: ";
+				a /= b;			  
+				a.print();		  
+				std::cout << "a+=2: ";
+				a += 2;			  
+				a.print();		  
+				std::cout << "a-=2: ";
+				a -= 2;			  
+				a.print();		  
+				std::cout << "a*=2: ";
+				a *= 2;			  
+				a.print();		  
+				std::cout << "a/=2: ";
+				a /= 2;			  
 				a.print();
 
+				std::cout << "Absolute Value of a: ";
 				std::cout << a.getAbsoluteValue() << std::endl;
+				std::cout << "Distance Between a and b: ";
+				std::cout << a.getDistance(b) << std::endl;
+				std::cout << "Additive Inverse of a: ";
 				a.getAdditiveInverse().print();
+				std::cout << "Multiplicative Inverse of a: ";
 				a.getMultiplicativeInverse().print();
+				std::cout << "Conjugate of a: ";
 				a.getConjugate().print();
+			
+				// Runs Test Code For Number Theory Class
+			case NumberTheoryTest:
+				std::cout << findGCD(28, 20) << std::endl;
 			}
 		}
 	}

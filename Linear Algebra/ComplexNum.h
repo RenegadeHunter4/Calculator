@@ -43,9 +43,14 @@ public:
 	ComplexNum<T> getAdditiveInverse() const;
 	ComplexNum<T> getConjugate() const;
 	T getAbsoluteValue() const;
+	T getDistance(const ComplexNum<T>& other) const;
 
 	// Utility
 	void print() const;
+
+	/**TODO**/
+
+	// Polar Coordinates (Requires Custom trig library)
 };
 
 /***********************Constructor/Destructor***********************************/
@@ -178,7 +183,7 @@ T ComplexNum<T>::GetReal() const {
 template<typename T>
 T ComplexNum<T>::GetImaginary() const {
 	return Imaginary;
-}
+} 
 
 template<typename T>
 void ComplexNum<T>::SetReal(T value) {
@@ -211,6 +216,13 @@ template<typename T>
 T ComplexNum<T>::getAbsoluteValue() const {
 	return T(sqrt(Real * Real + Imaginary * Imaginary));
 }
+
+template<typename T>
+inline T ComplexNum<T>::getDistance(const ComplexNum<T>& other) const {
+	return T(sqrt((Real - other.Real) * (Real - other.Real) + (Imaginary - other.Imaginary) * (Imaginary - other.Imaginary)));
+}
+
+/************************************UTILITY***********************************/
 
 template<typename T>
 void ComplexNum<T>::print() const {

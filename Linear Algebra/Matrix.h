@@ -70,5 +70,11 @@ public:
 	void ECOSwap(int col1, int col2);
 	void ECOScale(int col, int scaler);
 	void ECOAdd(int col1, int col2, int scaler);
+
+	/**TODO**/
+	// REF and RREF finding functions
+	// Inverse Finding Function
+	// Rework class using templates
+	// Rework class using custom vector wrapper that defines operations.
 };
 
